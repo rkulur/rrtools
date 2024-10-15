@@ -9,7 +9,7 @@ const Hero = () => {
   const textArea = useRef<null | HTMLTextAreaElement>(null);
   const previewHTML = useRef<null | HTMLDivElement>(null);
 
-  const API = import.meta.env.VITE_TOOLS_API;
+  const API = import.meta.env.VITE_APP_TOOLS_API;
   console.log(API);
   const handleMarkdownToHTMLConversion = () => {
     const markdownContent = textArea.current?.value;
