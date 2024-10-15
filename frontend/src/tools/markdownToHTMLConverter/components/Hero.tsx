@@ -10,6 +10,7 @@ const Hero = () => {
   const previewHTML = useRef<null | HTMLDivElement>(null);
 
   const API = import.meta.env.VITE_TOOLS_API;
+  console.log(API);
   const handleMarkdownToHTMLConversion = () => {
     const markdownContent = textArea.current?.value;
     axios
