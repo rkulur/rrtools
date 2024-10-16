@@ -2,7 +2,7 @@ const initialMd = `# This is heading
 ## This is subheading
 ### This is subheading of the subheading
 
-This line consisist of **bold** letters, *itlalic letters*, and letters having both *** bold and italics ***
+This line consists **bold** letters, *italic letters*, and letters having both *** bold and italic styles ***
 
 # Unordered list
 - Apple
