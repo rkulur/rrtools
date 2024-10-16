@@ -137,7 +137,7 @@ const Hero = () => {
             ></div>
             {resultState === "raw" && (
               <button
-                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95 absolute top-[4.1rem] right-[2.28rem]"
+                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95 absolute top-[1.5rem] right-[2.28rem]"
                 onClick={handleCopyFunctionality}
               >
                 Copy
