@@ -76,7 +76,7 @@ const Hero = () => {
 
   return (
     <main className="px-8 py-6 w-full min-h-5/6 h-full max-w-[1440px] lg:gap-8 md:mt-32 flex flex-col items-center justify-center">
-      <div className="grid md:grid-cols-2 gap-4 lg:gap-10 h-fit w-full ">
+      <div className="grid grid-row-2 grid-cols-1 md:grid-rows-1 md:grid-cols-2 gap-4 lg:gap-10 h-fit w-full">
         <div className="relative border border-white">
           <p className="border-black border-x border-t w-fit px-4 py-2 rounded-t-md border-b border-b-white absolute bg-white top-0">
             Enter Markdown
@@ -99,7 +99,7 @@ const Hero = () => {
             Convert
           </button>
         </div>
-        <div className="relative">
+        <div className="relative w-full">
           <div className="absolute top-0 flex">
             <p
               className={`w-fit px-4 py-2 rounded-t-md bg-white border-b z-10 border-black cursor-pointer select-none hover:bg-gray-200 ${resultState === "preview" && "border-black border-x border-t border-b-white"}`}
@@ -133,7 +133,7 @@ const Hero = () => {
             <div
               ref={previewHTML}
               id="preview-html-container"
-              className="border border-gray-300 h-full rounded-md overflow-auto p-2"
+              className="border border-gray-300 h-full w-full break-words rounded-md overflow-auto p-2 text-wrap"
             ></div>
             {resultState === "raw" && (
               <button
