@@ -81,7 +81,7 @@ const Hero = () => {
           <p className="border-black border-x border-t w-fit px-4 py-2 rounded-t-md border-b border-b-white absolute bg-white top-0">
             Enter Markdown
           </p>
-          <div className="p-4 border border-black min-h-52 h-[25rem] max-h-[30rem]  mt-[2.56rem] rounded-r-md rounded-b-md">
+          <div className="p-4 border border-black min-h-52 h-[25rem] max-h-[30rem]  mt-[2.56rem] rounded-r-md rounded-b-md font-['JetBrains_Mono'] ">
             <textarea
               ref={textArea}
               defaultValue={initialMd}
