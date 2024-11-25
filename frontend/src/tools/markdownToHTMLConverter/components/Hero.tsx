@@ -1,14 +1,18 @@
 import axios from "axios";
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useCallback, useRef, useState } from "react";
 import "./previewHtml.css";
 import initialMd from "./initialMd";
 import Loader from "../../../components/Loader";
+import { debounce } from "lodash";
+import "../mdToHTML.css";
 
 const Hero = () => {
   const [resultState, setResultState] = useState<"preview" | "raw">("preview");
   const [htmlStr, setHtmlStr] = useState("");
+  const [exBtnVisibility, setExBtnVisibility] = useState(true);
   const [loaderVisibility, setLoaderVisibility] = useState(false);
   const textArea = useRef<null | HTMLTextAreaElement>(null);
+  const cpyBtn = useRef<null | HTMLButtonElement>(null);
   const previewHTML = useRef<null | HTMLDivElement>(null);
 
   const API = import.meta.env.VITE_TOOLS_API;
@@ -44,6 +48,11 @@ const Hero = () => {
       });
   };
 
+  const handleMarkdownToHTMLConversionDebounced = useCallback(
+    debounce(handleMarkdownToHTMLConversion, 500),
+    [],
+  );
+
   const handleTabInsertion = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Tab") {
       e.preventDefault();
@@ -64,29 +73,50 @@ const Hero = () => {
 
   const handleCopyFunctionality = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(htmlStr).then(() => {
-        alert("HTML copied to Clipboard");
-      });
+      navigator.clipboard.writeText(htmlStr).then(() => {});
+      if (cpyBtn.current) {
+        cpyBtn.current.innerText = "Copied...";
+      }
+      setTimeout(() => {
+        if (cpyBtn.current) {
+          cpyBtn.current.innerText = "Copy";
+        }
+      }, 500);
     }
   };
 
-  useEffect(() => {
-    handleMarkdownToHTMLConversion();
-  }, []);
+  const handleAddingExample = () => {
+    if (textArea.current) {
+      textArea.current.value = initialMd;
+      handleMarkdownToHTMLConversion();
+      setExBtnVisibility(false);
+    }
+  };
 
   return (
     <main className="px-8 py-6 w-full min-h-5/6 h-full max-w-[1440px] lg:gap-8 md:mt-32 flex flex-col items-center justify-center">
       <div className="grid grid-row-2 grid-cols-1 md:grid-rows-1 md:grid-cols-2 gap-4 lg:gap-10 h-fit w-full">
         <div className="relative border border-white">
-          <p className="border-black border-x border-t w-fit px-4 py-2 rounded-t-md border-b border-b-white absolute bg-white top-0">
+          <p className="border-black border-x border-t w-fit px-4 py-2 rounded-t-md border-b border-b-white z-10 absolute bg-white top-0">
             Enter Markdown
           </p>
-          <div className="p-4 border border-black min-h-52 h-[25rem] max-h-[30rem]  mt-[2.56rem] rounded-r-md rounded-b-md font-['JetBrains_Mono'] ">
+          <div className="p-4 border border-black min-h-52 h-[25rem] max-h-[30rem]  mt-[2.56rem] rounded-r-md rounded-b-md font-['JetBrains_Mono'] relative">
+            {exBtnVisibility && (
+              <button
+                className="btn absolute right-10 top-7 text-xs"
+                onClick={handleAddingExample}
+              >
+                Click to add example md
+              </button>
+            )}
             <textarea
               ref={textArea}
-              defaultValue={initialMd}
+              onChange={() => {
+                handleMarkdownToHTMLConversionDebounced();
+              }}
               className="w-full h-full outline-none border border-gray-300 resize-none p-2 rounded-md"
               wrap="soft"
+              placeholder="Start typing your markdown content"
               onKeyDown={handleTabInsertion}
             ></textarea>
           </div>
@@ -94,7 +124,9 @@ const Hero = () => {
         <div className="h-16 grid place-items-center md:hidden">
           <button
             className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95 "
-            onClick={handleMarkdownToHTMLConversion}
+            onClick={() => {
+              handleMarkdownToHTMLConversionDebounced();
+            }}
           >
             Convert
           </button>
@@ -136,26 +168,20 @@ const Hero = () => {
               className="border border-gray-300 h-full w-full break-words rounded-md overflow-auto p-2 text-wrap"
             ></div>
             {resultState === "raw" && (
-              <button
-                className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95 absolute top-[1.5rem] right-[2.28rem]"
-                onClick={handleCopyFunctionality}
-              >
-                Copy
-              </button>
+              <>
+                <button
+                  ref={cpyBtn}
+                  className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95 absolute top-[1.5rem] right-[2.28rem]"
+                  onClick={handleCopyFunctionality}
+                >
+                  Copy
+                </button>
+              </>
             )}
           </div>
         </div>
       </div>
-      <div className="hidden h-16 md:grid place-items-center">
-        <button
-          className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-600 active:scale-95"
-          onClick={handleMarkdownToHTMLConversion}
-        >
-          Convert
-        </button>
-      </div>
     </main>
   );
 };
-
 export default Hero;
